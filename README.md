@@ -99,12 +99,12 @@ This section will be expanded in parrelel with the liturature review described i
 ## Team and Roles
 
 ### Agam Kamran - V00946178
-### Objective 1: 
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 1: Setup Cadenza Baseline Code
+- **PI1 (basic):** Clone the Clarity repository and confirm the CAD2 Task 2 environment runs without errors in a Google Colab notebook.
+- **PI2 (basic):** Load a single scene from the CAD2 dataset
+- **PI3 (expected):** Run the full baseline pipeline end-to-end on one scene
+- **PI4 (expected):** Compute the HAAQI score for the baseline output on that scene
+- **PI5 (advanced):**: Profile the baseline pipeline (runtime, memory per stage)
 
 ### Objective 2: 
 - **PI1 (basic):**
