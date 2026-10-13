@@ -1,7 +1,3 @@
----
-title: SP30 - Hearing-Adaptive Music Processor
-
----
 
 # SP30 - Hearing-Adaptive Music Processor
 > CSC 575 | University of Victoria | Fall 2026
