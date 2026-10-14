@@ -122,12 +122,12 @@ This section will be expanded in parrelel with the liturature review described i
 
 ---
 ### Steve Vinsensius Jo V01099466
-### Objective 1: 
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 1: Dataset loaded and preprocessing pipeline working
+- **PI1 (basic):** Download the CAD2 Task 2 training and validation data from Zenodo and verify against md5 checksums.
+- **PI2 (basic):** Load the listener, scene, gain, and compressor JSON files into Python.
+- **PI3 (expected):** Convert the audio to a consistent format and cut it into the fixed-length clips used by the scenes.
+- **PI4 (expected):** Write a documented data loader that returns the mixture, stems, audiogram, and gains for a given scene.
+- **PI5 (advanced):** Load the real-recording tuning set and report summary statistics comparing it with the synthetic data.
 
 ### Objective 2: 
 - **PI1 (basic):**
@@ -145,7 +145,7 @@ This section will be expanded in parrelel with the liturature review described i
 
 ---
 ### Mackenzie Mallett - V00878418	
-### Objective 1:
+### Objective 1: 
 - **PI1 (basic):**
 - **PI2 (basic):**
 - **PI3 (expected):**
