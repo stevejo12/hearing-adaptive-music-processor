@@ -145,12 +145,12 @@ This section will be expanded in parrelel with the liturature review described i
 
 ---
 ### Mackenzie Mallett - V00878418	
-### Objective 1: 
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 1: Literature Review
+- **PI1 (basic):** Review the winning papers from the 2024/2025 CAD2 challenge.
+- **PI2 (basic):** Review keystone literature in music retreival algorithm design.
+- **PI3 (expected):** Summarize common approaches and techniques from the literature in a one-pager.
+- **PI4 (expected):** Construct an algorithm design template with key issues.
+- **PI5 (advanced):** Draft algorithm roadmap based on previous literature.
 
 ### Objective 2:
 - **PI1 (basic):**
