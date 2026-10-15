@@ -168,12 +168,12 @@ This section will be expanded in parrelel with the liturature review described i
 
 ---
 ### Likkhith Krishnamurthy Aditya - V01098937
-### Objective 1:
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 1: Build Evaluation Metrics as a Module
+- **PI1 (basic):** Install pyClarity 0.6.3 and compute HAAQI for one output signal.
+- **PI2 (basic):** Wrap HAAQI in a reusable function that returns left, right and average scores.
+- **PI3 (expected):** Add per-instrument SDR using museval.
+- **PI4 (expected):** Score a batch of scenes and save the results to a CSV file.
+- **PI5 (advanced):** Confirm the scores match the official CAD2 evaluation script on a few scenes.
 
 ### Objective 2:
 - **PI1 (basic):**
