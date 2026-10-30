@@ -96,6 +96,12 @@ This section will be expanded in parrelel with the liturature review described i
 
 ---
 
+## Feedback on task breakdown
+The project design specification is clearly written. The task separation is reasonable and using the Cadenze challenge as the main focus is good. The objectives and performance indicators are ok but the advanced ones are more basic/expected in terms of difficulty. Although there is a lot of setup such as reading files/metadata etc I expect at least for the advanced performance indicators a bit more algorithmic stuff. Some suggestions could be **implementing different published algorithms about the tasks**. Also **one member could focus on pyClarity and hearing loss simulation in general**. *I encourage you to reach out to Kirill Abrosimov and he can provide you more guidance.*
+
+### Ideas on feedback / questions we can ask Krill:
+ - Should we focus on both tasks in one month? (ie Lyric Intelligibility and Classical Music rebalancing)
+ - Maybe instead of original algorithm we just implement existing algorithms and do a comparitive analysis
 ## Team and Roles
 
 ### Agam Kamran - V00946178
@@ -195,11 +201,16 @@ This section will be expanded in parrelel with the liturature review described i
 
 1. https://cadenzachallenge.org/docs/cadenza2/intro
 2. https://github.com/claritychallenge/clarity
-3. TBD
-4. TBD
-5. TBD
-.
-.
+3. Development of an adaptive test of musical scene analysis abilities for normal-hearing and hearing-impaired listeners, Hake et al, 2023. 
+4. Music listening and hearing aids: perspectives from audiologists and their patients, Greasley et al, 2020
+5. Perception of Recorded Music With Hearing Aids - Compression Differentially Affects Musical Scene Analysis and Musical Sound Quality - Hake et al 2025
+6. Can You Hear Out the Melody? Testing Musical Scene Perception in Young Normal-Hearing and Older Hearing-Impaired Listeners, Siedenburg et al, 2020
+7. Remixing Preferences for Western Instrumental Classical Music of Bilateral Cochlear Implant Users, Althoff et al, 2024
+8. Remixing music using source separation algorithms to improve the musical experience of cochlear implant users, Pons et al 2016
+9. Exploring level- and spectrum-based music mixing transforms for hearing-impaired listeners,  Benjamin & Siedenburg, 2023
 
-20
 <!-- target 15–20 -->
+## Lit Review Scratch
+### Lyric Intelligibility
+Lyrics are a key part of musical appreciation (Greasley et al., 2013)
+Hearing out lyrics common problem for those with HL (Greasley et al., 2020)
