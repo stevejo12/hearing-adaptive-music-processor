@@ -208,6 +208,7 @@ The project design specification is clearly written. The task separation is reas
 7. Remixing Preferences for Western Instrumental Classical Music of Bilateral Cochlear Implant Users, Althoff et al, 2024
 8. Remixing music using source separation algorithms to improve the musical experience of cochlear implant users, Pons et al 2016
 9. Exploring level- and spectrum-based music mixing transforms for hearing-impaired listeners,  Benjamin & Siedenburg, 2023
+10. Music and Hearing Aids - Madsen and Moore 2014
 
 <!-- target 15–20 -->
 ## Lit Review Scratch
