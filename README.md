@@ -101,7 +101,7 @@ This is an alternative to using the short-time fast fourier transform.
 | Design specification complete | 13 Oct 26 | All|
 | Dataset loaded and preprocessing pipeline working | 28 Oct 26 | Steve | 
 | Setup Cadenza Baseline Code | 28 Oct 26 | Agam |
-| Build Evaluation Metrics as a Module | 28 Oct 26 | Likkhith |
+| Review open-source projects and bring them into our GitHub repo| 28 Oct 26 | Likkhith |
 | Literature Review| 28 Oct 26 | Mack |
 | Progress report | 31 Oct 26 | All |
 | Algorithm Design | 20 Nov 26|All |
@@ -204,12 +204,12 @@ The project design specification is clearly written. The task separation is reas
 
 ---
 ### Likkhith Krishnamurthy Aditya
-### Objective 1: Build Evaluation Metrics as a Module
-- **PI1 (basic):** Install pyClarity 0.6.3 and compute HAAQI for one output signal.
-- **PI2 (basic):** Wrap HAAQI in a reusable function that returns left, right and average scores.
-- **PI3 (expected):** Add per-instrument SDR using museval.
-- **PI4 (expected):** Score a batch of scenes and save the results to a CSV file.
-- **PI5 (advanced):** Confirm the scores match the official CAD2 evaluation script on a few scenes.
+### Objective 1: Review open-source projects and add them to our repo
+- **PI1 (basic):** Review open-source separation projects and note each one's method, licence and fit.
+- **PI2 (basic):** Add the useful ones to `third_party/` with their licences and a summary table.
+- **PI3 (expected):** Run the CAD2 causal and non-causal separators and HTDemucs on the same validation scenes.
+- **PI4 (expected):** Compare them with HAAQI and per-instrument SDR.
+- **PI5 (advanced):** Train Open-Unmix for one instrument and ensemble it with the baseline separator.
 
 ### Objective 2:
 - **PI1 (basic):**
