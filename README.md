@@ -4,6 +4,11 @@
 
 ---
 
+To add submodules run this command in your terminal. Adding clarity to the project was the easiest way to inspect the baseline folders in the IDE.
+``` bash
+git submodule update --init --recursive
+```
+
 ## Overview
 
 
