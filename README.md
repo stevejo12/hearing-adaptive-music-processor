@@ -159,10 +159,10 @@ The project design specification is clearly written. The task separation is reas
 ---
 ### Steve Vinsensius Jo 
 ### Objective 1: Dataset loaded and preprocessing pipeline working
-- **PI1 (basic):** Download the CAD2 Task 2 training and validation data from Zenodo and verify against md5 checksums.
+- **PI1 (basic):** Get the CAD2 Task 2 validation and eval data from the shared Google Drive copy of Zenodo, and verify each file against its md5 checksums.
 - **PI2 (basic):** Load the listener, scene, gain, and compressor JSON files into Python.
-- **PI3 (expected):** Convert the audio to a consistent format and cut it into the fixed-length clips used by the scenes.
-- **PI4 (expected):** Write a documented data loader that returns the mixture, stems, audiogram, and gains for a given scene.
+- **PI3 (expected):** Convert the audio to a consistent format (44.1 kHz stereo) and cut it into the fixed-length clips used by the scenes. 
+- **PI4 (expected):** Write a documented data loader that returns the mixture, stems, audiogram, and gains for a given scene in the format the Conv-TasNet baseline expects.
 - **PI5 (advanced):** Load the real-recording tuning set and report summary statistics comparing it with the synthetic data.
 
 ### Objective 2: 
