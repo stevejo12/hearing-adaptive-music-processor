@@ -1,3 +1,7 @@
 [submodule "third_party/clarity"]
 	path = third_party/clarity
 	url = https://github.com/claritychallenge/clarity.git
+
+[submodule "third_party/orig_Conv_TasNet"]
+	path=third_party/orig_Conv_TasNet
+	url= https://github.com/naplab/Conv-TasNet
