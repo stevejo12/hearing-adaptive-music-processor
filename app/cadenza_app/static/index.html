@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cadenza</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Cadenza &middot; hearing-adaptive music</h1>
+    <form method="post" action="/logout"><button class="link" type="submit">Log out</button></form>
+  </header>
+
+  <div id="banner" role="status" hidden></div>
+
+  <p class="note">Classical woodwind trios only (2 to 3 instruments). Results on real recordings are
+    limited: the Cadenza models were trained mostly on synthetic data.</p>
+
+  <section>
+    <h2>Model</h2>
+    <div class="row-opts" id="modelBar">
+      <div><label for="model">Model</label><select id="model"></select></div>
+      <div><label for="residual" title="Share of the other instruments kept in each separated stem (baseline uses 0.1)">Residual (0 to 1)</label>
+        <input id="residual" class="num" type="number" min="0" max="1" step="0.05" value="0.1"></div>
+      <div><button id="delModel" type="button" hidden>Delete model</button></div>
+      <div class="push"><label for="modelName">Upload a new model</label>
+        <input id="modelName" placeholder="Name (optional)" maxlength="60">
+        <button id="uploadModel" type="button">Upload model (.zip)</button>
+        <input id="modelFile" type="file" accept=".zip,application/zip" hidden></div>
+    </div>
+    <div class="cap" id="modelInfo"></div>
+    <progress id="modelProg" max="100" value="0" hidden></progress>
+    <div id="modelMsg" class="cap" role="status"></div>
+    <details class="cap"><summary>Model zip layout</summary>
+      <pre>my_model.zip
+  Flute/config.json
+  Flute/model.safetensors
+  Oboe/config.json
+  Oboe/model.safetensors     (any of: Bassoon, Clarinet, Flute, Oboe, Sax)</pre>
+      Instruments missing from the zip use the baseline model. Weights must be <b>safetensors</b>;
+      .pt / .bin / .ckpt files are refused because they can run code when loaded.
+      Uploaded models stay on the server for everyone.</details>
+
+    <h2>Song</h2>
+    <div class="drops">
+      <div class="drop" data-kind="song">
+        <strong>Song</strong>
+        <div class="zone">Drop an mp3 here or click</div>
+        <div class="file" id="songName">No file</div>
+        <input type="file" id="songInput" accept=".mp3,.wav,.flac,.m4a,.ogg,.aac,audio/*" hidden>
+      </div>
+      <div class="drop" data-kind="ear" data-ear="l">
+        <strong>Left ear audiogram (dB HL)</strong>
+        <div class="zone">Drop a .csv / .txt / .json or click</div>
+        <div class="file" id="fileL">or type the 8 values below</div>
+        <input type="file" accept=".csv,.txt,.json" hidden>
+        <div class="hl" id="hlL"></div>
+      </div>
+      <div class="drop" data-kind="ear" data-ear="r">
+        <strong>Right ear audiogram (dB HL)</strong>
+        <div class="zone">Drop a .csv / .txt / .json or click</div>
+        <div class="file" id="fileR">or type the 8 values below</div>
+        <input type="file" accept=".csv,.txt,.json" hidden>
+        <div class="hl" id="hlR"></div>
+      </div>
+    </div>
+
+    <div class="row-opts">
+      <div id="instruments"></div>
+      <div id="gains"></div>
+      <button id="go" type="button">Go</button>
+    </div>
+    <div id="msg" role="status"></div>
+  </section>
+
+  <h2 id="historyTitle">History</h2>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2" class="c-audio">Before</th>
+          <th rowspan="2" class="c-audio">After</th>
+          <th rowspan="2" class="c-rate">Rate</th>
+          <th rowspan="2" class="c-comment">Comment</th>
+          <th rowspan="2" class="c-small">Residual</th>
+          <th rowspan="2" class="c-inst">Instruments (gain dB)</th>
+          <th colspan="2" title="Hearing loss in dB HL at 250, 500, 1k, 2k, 3k, 4k, 6k, 8k Hz">Audiogram dB HL<br><span class="hz">250 500 1k 2k 3k 4k 6k 8k Hz</span></th>
+        </tr>
+        <tr class="sub"><th class="c-ear">L</th><th class="c-ear">R</th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>Nothing processed with this model yet.</div>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

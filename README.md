@@ -204,12 +204,12 @@ The project design specification is clearly written. The task separation is reas
 
 ---
 ### Likkhith Krishnamurthy Aditya
-### Objective 1: Review open-source projects and add them to our repo
-- **PI1 (basic):** Review open-source separation projects and note each one's method, licence and fit.
-- **PI2 (basic):** Add the useful ones to `third_party/` with their licences and a summary table.
-- **PI3 (expected):** Run the CAD2 causal and non-causal separators and HTDemucs on the same validation scenes.
-- **PI4 (expected):** Compare them with HAAQI and per-instrument SDR.
-- **PI5 (advanced):** Train Open-Unmix for one instrument and ensemble it with the baseline separator.
+### Objective 1: Review open-source projects, add them to our repo, and pair-program with Agam
+- **PI1 (basic):** Review open-source separation projects (method, licence, fit for Task 2).
+- **PI2 (basic):** Add the useful ones to `third_party/` with licences and a summary table.
+- **PI3 (expected):** Pair-program with Agam to set up the CAD2 data and Clarity in Colab.
+- **PI4 (expected):** Pair-program with Agam to run the baseline and HAAQI on a validation scene.
+- **PI5 (advanced):** Compare the causal and non-causal separators on 20 scenes with HAAQI and SDR.
 
 ### Objective 2:
 - **PI1 (basic):**
