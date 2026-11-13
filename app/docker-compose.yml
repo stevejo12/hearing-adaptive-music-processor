@@ -1,0 +1,19 @@
+services:
+  cadenza:
+    build:
+      context: .
+      args:
+        CLARITY_REF: ${CLARITY_REF:-9df6486fb0bddc7619b3b99f1b3a5c72c109a3ec}
+        CADENZA_CAUSALITY: ${CADENZA_CAUSALITY:-noncausal}
+    image: cadenza-app:latest
+    ports:
+      - "${PORT:-8080}:8000"
+    environment:
+      APP_USER: ${APP_USER:-admin}
+      APP_PASSWORD: ${APP_PASSWORD:-admin}
+      APP_SECRET: ${APP_SECRET:-}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-50}
+      MAX_SECONDS: ${MAX_SECONDS:-120}
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
