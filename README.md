@@ -35,7 +35,40 @@ In desiging our algorithm we have the benefit of knowing the previous results of
 
 After reviewing previous work we will put forward a draft design specification for our algorithm. The constraints for this algorithm will be the same as those used by the CAD2 challenge, and evaluation will be the same as that which is described above.
 
-If time permits, we will attempt to package our algorithm into a practical tool available to avid music listeners experiencing hearing loss. 
+We will package the baseline, and any improvement we make to it, into a web app that music listeners with hearing loss can use (see Project plan below; the app is in `app/`). 
+
+## Project plan
+
+**Decisions so far:** Basic uses the pretrained Cadenza baseline from Hugging Face (training and fine-tuning belong to Advanced). Uploads are classical woodwind trios only. Default instrument gains come from a simple rule on the audiogram. The web app is a Docker app on our own server, local network. Models are saved as safetensors, not `.joblib`.
+
+### Basic: Cadenza baseline working
+- Notebooks `cadenza/00` to `03` run the baseline and HAAQI on Colab with the shared Drive data.
+- Score the baseline on the whole validation set to get a reference HAAQI (published non-causal baseline: about 0.3548).
+- A Docker web app runs the baseline on an uploaded song instead of a Colab notebook (`app/`, done).
+
+### Expected: the goal for this project
+- Upload a woodwind-trio mp3 and a hearing profile (left and right audiogram), and get back the processed song as Cadenza intends.
+- A preprocessing step ("the qualifier", plain code, not a trained model) decodes the mp3, converts the audio and audiogram to what the baseline expects, and shows a notice that only classical woodwind trios are supported.
+- Default per-instrument gains come from the audiogram (a simple rule), and can be overridden.
+- A history table lists every processed song with Before and After players, a star rating and a comment, plus the settings used (residual, instruments with gains, left and right audiogram). Each model has its own table.
+
+### Advanced: improve on the baseline and show it
+- Try to beat the baseline with new research, small additions or something novel (for example fine-tuning the separators on the Cadenza data with real-recording-like augmentation, a better gain rule, longer context windows).
+- Compare baseline and improved on the validation scenes with HAAQI and per-instrument SDR.
+- Models can be uploaded from the web app as a zip, so a new model is compared against the baseline in the GUI. Models must keep the Cadenza ConvTasNet architecture to load without app changes.
+- The GUI shows the improvement (A/B audio, before and after spectrograms, HAAQI table). Uploaded songs have no reference stems, so HAAQI is only for the Cadenza validation scenes.
+
+### System architecture
+```
+COLAB (training)                      SERVER (Docker, local network)
+Cadenza data -> train / fine-tune     Login -> upload mp3 + audiogram (L/R)
+   |                                     |
+   '-> checkpoint (safetensors)          v
+         -> upload zip in the page    Qualifier (decode, audiogram format, trio notice)
+                                         -> gain rule -> separate (ConvTasNet per instrument)
+                                         -> apply gains -> remix -> hearing-aid stage
+                                         -> MP3 -> history table (Before | After | Rate | Comment | settings)
+```
 
 ## Tools and Libraries
 
@@ -45,6 +78,8 @@ If time permits, we will attempt to package our algorithm into a practical tool 
 | librosa | Spectrogram visualization + Feature Extraction|
 | soundfile | Reading and writing WAV files from the CAD2 dataset |
 | NumPy | Array Math |
+| PyTorch + Hugging Face Hub | Running (and fine-tuning) the Cadenza ConvTasNet separators; pretrained models |
+| FastAPI + Docker + ffmpeg | Web app (`app/`): upload, processing, history; mp3 decode and encode |
 
 More to be expanded upon as we approach this project.
 
@@ -99,30 +134,20 @@ This is an alternative to using the short-time fast fourier transform.
 | Milestone | Target Date | Owner |
 |-----------|-------------|-------|
 | Design specification complete | 13 Oct 26 | All|
-| Dataset loaded and preprocessing pipeline working | 28 Oct 26 | Steve | 
-| Setup Cadenza Baseline Code | 28 Oct 26 | Agam |
-| Review open-source projects and bring them into our GitHub repo| 28 Oct 26 | Likkhith |
-| Literature Review| 28 Oct 26 | Mack |
-| Progress report | 31 Oct 26 | All |
-| Algorithm Design | 20 Nov 26|All |
-|&nbsp;&nbsp;↳  Algo Milestone 1 | 6 Nov 26 | All |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 1.1 - TBD | 6 Nov 26 | Agam |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 1.2 - TBD | 6 Nov 26 | Likkhith |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 1.3 - TBD | 6 Nov 26 | Mack |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 1.4 - TBD | 6 Nov 26 | Steve |
-|&nbsp;&nbsp;↳  Algo Milestone 2 | 13 Nov 26 | All |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 2.1 - TBD | 13 Nov 26 | Agam |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 2.2 - TBD | 13 Nov 26 | Likkhith |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 2.3 - TBD | 13 Nov 26 | Mack |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 2.4 - TBD | 13 Nov 26 | Steve |
-|&nbsp;&nbsp;↳  Algo Milestone 3 | 20 Nov 26 | All |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 3.1 - TBD | 20 Nov 26 | Agam |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 3.2 - TBD | 20 Nov 26 | Likkhith |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 3.3 - TBD | 20 Nov 26 | Mack |
-|&nbsp;&nbsp;↳&nbsp;&nbsp;↳  Task 3.4 - TBD | 20 Nov 26 | Steve |
-| Scene Generation and Random Listener Selection | | | 
-| Spectrogram visualization (before/after) | 30 Nov 26| |
+| Dataset loaded and preprocessing pipeline working (Steve, Obj 1) | 28 Oct 26 | Steve | 
+| Setup Cadenza Baseline Code (Agam, Obj 1) | 28 Oct 26 | Agam |
+| Review open-source projects and bring them into our GitHub repo (Likkhith, Obj 1) | 28 Oct 26 | Likkhith |
+| Literature Review (Mack, Obj 1) | 28 Oct 26 | Mack |
+| Baseline web app in Docker (Basic and Expected, `app/`) | 12 Nov 26 (done) | Agam |
+| Progress report | 16 Nov 26 | All |
+| Algorithm Design | 27 Nov 26 | All |
+|&nbsp;&nbsp;↳  Implement the ConvTasNet method (Mack, Obj 2) | 20 Nov 26 | Mack |
+|&nbsp;&nbsp;↳  Adjust ConvTasNet to encode non-frequency elements of music (Mack, Obj 3) | 27 Nov 26 | Mack |
+| Web app: upload the improved model and show the improvement (Advanced) | 27 Nov 26 | Agam |
+| Spectrogram visualization (before/after) | 28 Nov 26| |
 | Final report  | 30 Nov 26| All |
+
+_Re-planned on 15 Nov 26: the progress report moved from 31 Oct to 16 Nov, the final report stays on 30 Nov. Rows are tied to the objectives written under Team and Roles; the empty "Task n.n - TBD" rows were removed. Objectives 2 and 3 for Agam, Steve and Likkhith are still blank, so they have no rows yet. Add a row when those objectives are written. The README gives no deadlines for Mack's Objectives 2 and 3, so 20 and 27 Nov are proposed. Individual objectives are unchanged._
 
 ---
 
