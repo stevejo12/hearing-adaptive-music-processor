@@ -52,11 +52,12 @@ class CAD2Loader:
                     return name
         if split == "valid":
             info = self._json_optional("music.valid.to_generate.json").get(song_name, {})
-            found = {
-                v["source_dataset"].split("/")[0]
-                for v in info.values()
-                if isinstance(v, dict) and "source_dataset" in v
-            }
+            found = set()
+            for v in info.values():
+                if isinstance(v, dict) and v.get("source_dataset"):
+                    parts = [p for p in str(v["source_dataset"]).split("/") if p]  # skip empty parts
+                    if parts:
+                        found.add(parts[0])
             if found:
                 return "+".join(sorted(found))
         if split == "train":
@@ -134,8 +135,18 @@ class CAD2Loader:
             signal = np.repeat(signal, 2, axis=1)
         return signal
 
-    def load_clip(self, entry: dict, cut: bool = True) -> np.ndarray:
-        signal, sr = read_flac_signal(self.audio / entry["track"])
+    def _path(self, track: str, split: str | None = None) -> Path:
+        path = self.audio / track
+        if not path.exists() and split and (self.audio / split / track).exists():
+            return self.audio / split / track
+        return path
+
+    def load_clip(self, entry: dict, cut: bool = True, split: str | None = None) -> np.ndarray:
+        path = self._path(entry["track"], split)
+        if not path.exists():
+            tried = [str(path)] + ([str(self.audio / split / entry["track"])] if split else [])
+            raise FileNotFoundError(f"{entry['track']} not found (tried {' and '.join(tried)})")
+        signal, sr = read_flac_signal(path)
         if sr != SAMPLE_RATE:
             raise ValueError(f"{entry['track']}: expected {SAMPLE_RATE} Hz, got {sr}")
         signal = self.to_standard(signal)
@@ -177,15 +188,15 @@ class CAD2Loader:
         mix_entry = self._mixture_entry(song)
         if mix_entry is None:
             raise FileNotFoundError(f"no mixture found for {scene_id} ({scene['music']})")
-        mixture = self.load_clip(mix_entry)
+        mixture = self.load_clip(mix_entry, split=split)
 
         sources = {k: v for k, v in song.items() if k.startswith("source")}
         instruments = {k: v["instrument"].split("_")[0] for k, v in sources.items()}
         stems, missing = {}, []
         if load_stems:
             for k, entry in sources.items():
-                if (self.audio / entry["track"]).exists():
-                    stems[k] = self.load_clip(entry)
+                if self._path(entry["track"], split).exists():
+                    stems[k] = self.load_clip(entry, split=split)
                 else:
                     missing.append(k)
 
