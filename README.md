@@ -138,16 +138,16 @@ This is an alternative to using the short-time fast fourier transform.
 | Setup Cadenza Baseline Code (Agam, Obj 1) | 28 Oct 26 | Agam |
 | Review open-source projects and bring them into our GitHub repo (Likkhith, Obj 1) | 28 Oct 26 | Likkhith |
 | Literature Review (Mack, Obj 1) | 28 Oct 26 | Mack |
-| Baseline web app in Docker (Basic and Expected, `app/`) | 12 Nov 26 (done) | Agam |
+| Baseline web app in Docker (Agam and Likkhith, Obj 2; `app/`) | 12 Nov 26 (done) | Agam, Likkhith |
 | Progress report | 16 Nov 26 | All |
 | Algorithm Design | 27 Nov 26 | All |
 |&nbsp;&nbsp;↳  Implement the ConvTasNet method (Mack, Obj 2) | 20 Nov 26 | Mack |
 |&nbsp;&nbsp;↳  Adjust ConvTasNet to encode non-frequency elements of music (Mack, Obj 3) | 27 Nov 26 | Mack |
-| Web app: upload the improved model and show the improvement (Advanced) | 27 Nov 26 | Agam |
+| Web app: upload the improved model and show the improvement (Agam and Likkhith, Obj 2) | 27 Nov 26 | Agam, Likkhith |
 | Spectrogram visualization (before/after) | 28 Nov 26| |
 | Final report  | 30 Nov 26| All |
 
-_Re-planned on 15 Nov 26: the progress report moved from 31 Oct to 16 Nov, the final report stays on 30 Nov. Rows are tied to the objectives written under Team and Roles; the empty "Task n.n - TBD" rows were removed. Objectives 2 and 3 for Agam, Steve and Likkhith are still blank, so they have no rows yet. Add a row when those objectives are written. The README gives no deadlines for Mack's Objectives 2 and 3, so 20 and 27 Nov are proposed. Individual objectives are unchanged._
+_Re-planned on 15 Nov 26: the progress report moved from 31 Oct to 16 Nov, the final report stays on 30 Nov. Rows are tied to the objectives written under Team and Roles; the empty "Task n.n - TBD" rows were removed. Steve's Objectives 2 and 3, and Agam's and Likkhith's Objective 3, are still blank, so they have no rows yet. Add a row when those objectives are written. The README gives no deadlines for Mack's Objectives 2 and 3, so 20 and 27 Nov are proposed. Agam's Objective 1 (pair-programming with Likkhith) and Agam's and Likkhith's Objective 2 (the web app) were written on 15 Nov; no one else's objectives were changed._
 
 ---
 
@@ -160,19 +160,20 @@ The project design specification is clearly written. The task separation is reas
 ## Team and Roles
 
 ### Agam Kamran
-### Objective 1 (by Oct 28): Setup Cadenza Baseline Code
-- **PI1 (basic):** Clone the Clarity repository and confirm the CAD2 Task 2 environment runs without errors in a Google Colab notebook.
-- **PI2 (basic):** Load a single scene from the CAD2 dataset
-- **PI3 (expected):** Run the full baseline pipeline end-to-end on one scene
-- **PI4 (expected):** Compute the HAAQI score for the baseline output on that scene
+### Objective 1 (by Oct 28): Setup Cadenza Baseline Code (pair-programming with Likkhith)
+- **PI1 (basic):** Pair-program with Likkhith to clone the Clarity repository and confirm the CAD2 Task 2 environment runs without errors in a Google Colab notebook.
+- **PI2 (basic):** Pair-program with Likkhith to load a single scene from the CAD2 dataset
+- **PI3 (expected):** Pair-program with Likkhith to run the full baseline pipeline end-to-end on one scene
+- **PI4 (expected):** Pair-program with Likkhith to compute the HAAQI score for the baseline output on that scene
 - **PI5 (advanced):**: Profile the baseline pipeline (runtime, memory per stage)
 
-### Objective 2: 
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 2: Host the Cadenza web app so people with hearing loss can try it (pair-programming with Likkhith)
+*Why:* a Colab notebook is hard to use. A simple web app lets people with hearing impairment try Cadenza themselves: upload a song and a hearing profile, then listen and rate the result.
+- **PI1 (basic):** Build a Docker container that runs the pretrained Cadenza baseline behind a web page and starts with one command.
+- **PI2 (basic):** Host the container on our own server, with a login, so anyone can open the page.
+- **PI3 (expected):** Accept an mp3 and a left and right audiogram, convert ("qualify") them into what Cadenza expects, process the song, and return an MP3.
+- **PI4 (expected):** List every run in a table: Before and After players, a star rating, a comment, and the settings used.
+- **PI5 (advanced):** Let users upload a new model as a zip, keep a separate table of songs per model, and show how it compares with the baseline.
 
 ### Objective 3: 
 - **PI1 (basic):**
@@ -236,12 +237,13 @@ The project design specification is clearly written. The task separation is reas
 - **PI4 (expected):** Pair-program with Agam to run the baseline and HAAQI on a validation scene.
 - **PI5 (advanced):** Compare the causal and non-causal separators on 20 scenes with HAAQI and SDR.
 
-### Objective 2:
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 2: Host the Cadenza web app and make it easy to use (pair-programming with Agam)
+*Why:* people with hearing impairment should be able to experiment with Cadenza without code. The app has to be simple to use, give clear errors, and be tested.
+- **PI1 (basic):** Pair-program with Agam to run the Docker container and open the web app from a second computer.
+- **PI2 (basic):** Test it with sample songs and audiograms from the Cadenza data and write down any problems.
+- **PI3 (expected):** Make the upload easy: type or drop the left and right audiogram, add clear error messages, and check the automatic instrument gains from the audiogram.
+- **PI4 (expected):** Check the rating and comment table, then have a few people try the app and collect their ratings and comments.
+- **PI5 (advanced):** Upload a team-trained model as a zip and compare it with the baseline in the app (A/B listening and HAAQI on validation scenes).
 
 ### Objective 3:
 - **PI1 (basic):**
