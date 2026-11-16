@@ -191,19 +191,19 @@ The project design specification is clearly written. The task separation is reas
 - **PI4 (expected):** Write a documented data loader that returns the mixture, stems, audiogram, and gains for a given scene in the format the Conv-TasNet baseline expects.
 - **PI5 (advanced):** Load the real-recording tuning set and report summary statistics comparing it with the synthetic data.
 
-### Objective 2: 
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 2: Analyze the baseline architecture relative to available literature (pair task with Mack)
+- **PI1 (basic):** Download the Cadenza toolkit, clarity.
+- **PI2 (basic):** Review and map the model architecture.
+- **PI3 (expected):** Using existing literature, interpret the choices made in the demix/remix system.
+- **PI4 (expected):** Find architecture augmentations which could improve model performance from literature. 
+- **PI5 (advanced):** Design a novel architecture augmentation.
 
-### Objective 3:
-- **PI1 (basic):**
-- **PI2 (basic):**
-- **PI3 (expected):**
-- **PI4 (expected):**
-- **PI5 (advanced):**
+### Objective 3: Implement and train algorithm improvements (pair task with Mack)
+- **PI1 (basic):** Understand how deep learning networks are written in PyTorch.
+- **PI2 (expected):** Implement architecture augmentations in clarity baseline.
+- **PI4 (expected):** Train augmented models using a service like Google Colab.
+- **PI2 (advanced):** Evaluate model performance against baseline architecture. 
+- **PI5 (basic):** Save model weights as safetensors.
 
 ---
 ### Mackenzie Mallett
@@ -214,19 +214,19 @@ The project design specification is clearly written. The task separation is reas
 - **PI4 (expected):** Construct an algorithm design template with key issues.
 - **PI5 (advanced):** Draft algorithm roadmap based on previous literature.
 
-### Objective 2: Implement the ConvTasNet Method used by the winning paper
-- **PI1 (basic):** Download and implement PyTorch (this is what the original setup was done in) or TensorFlow.
-- **PI2 (expected):** Setup the Conv-TasNet architecture using PyTorch or Tensor Flow.
-- **PI3 (expected):** Optimize hyperparameters to mimic the performance of the winning paper.
-- **PI4 (basic):** Test on the provided dataset to determine baseline.
-- **PI5 (advanced):** Analyze which blocks of the Convolutional Network have the biggest impact on performance.
+### Objective 2: Analyze the baseline architecture relative to available literature (pair task with Steve)
+- **PI1 (basic):** Download the Cadenza toolkit, clarity.
+- **PI2 (basic):** Review and map the model architecture.
+- **PI3 (expected):** Using existing literature, interpret the choices made in the demix/remix system.
+- **PI4 (expected):** Find architecture augmentations which could improve model performance from literature. 
+- **PI5 (advanced):** Design a novel architecture augmentation. Consider how to implement factors such as: Rhythm/Tempo, Articulation/Duration, Space/Rest, Phrasing, etc into the network. The idea is to identify each signal by more than just the frequency range (the direction of the melody).
 
-### Objective 3: Adjust the Conv-TasNet method to incorporate elements of music not captured by the current setup
-- **PI1 (basic):** Identify which elements of the network would encode non-frequency elements (encoder and spereation stages?)(maybe a longer time window to improve accuracy as the melody progresses.).
-- **PI2 (advanced):** Consider how to implement factors such as: Rhythm/Tempo, Articulation/Duration, Space/Rest, Phrasing, etc into the network. The idea is to identify each signal by more than just the frequency range (the direction of the melody).
-- **PI3 (basic):** Implement elements of the network to encode non-frequency elements.
-- **PI4 (expected):** Test selected methods to determine which have the greatest impact (it may be just one...).
-- **PI5 (expected):** Per-instrument experiments.
+### Objective 3: Implement and train algorithm improvements (pair task with Steve)
+- **PI1 (basic):** Understand how deep learning networks are written in PyTorch.
+- **PI2 (expected):** Implement architecture augmentations in clarity baseline.
+- **PI4 (expected):** Train augmented models using a service like Google Colab.
+- **PI2 (advanced):** Evaluate model performance against baseline architecture. 
+- **PI5 (basic):** Save model weights as safetensors.
 
 ---
 ### Likkhith Krishnamurthy Aditya
