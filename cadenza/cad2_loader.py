@@ -8,10 +8,20 @@ import numpy as np
 import yaml
 from scipy.signal import resample_poly
 
+import soundfile as sf
+
 from clarity.utils.audiogram import Listener
-from clarity.utils.flac_encoder import read_flac_signal
 
 SAMPLE_RATE = 44100  # input_sample_rate in the baseline config.yaml
+
+
+def read_flac(path: Path) -> tuple[np.ndarray, int]:
+    signal, sr = sf.read(str(path), dtype="int16", always_2d=False)
+    signal = (signal / 32768.0).astype(np.float32)
+    scale_file = Path(path).with_suffix(".txt")
+    if scale_file.exists():
+        signal *= float(scale_file.read_text(encoding="utf-8"))
+    return signal, sr
 
 # Used to label where a track comes from (real recording vs synthetic render)
 REAL_DATASETS = ("URMP", "BACH10", "Bach10")
@@ -146,7 +156,7 @@ class CAD2Loader:
         if not path.exists():
             tried = [str(path)] + ([str(self.audio / split / entry["track"])] if split else [])
             raise FileNotFoundError(f"{entry['track']} not found (tried {' and '.join(tried)})")
-        signal, sr = read_flac_signal(path)
+        signal, sr = read_flac(path)
         if sr != SAMPLE_RATE:
             raise ValueError(f"{entry['track']}: expected {SAMPLE_RATE} Hz, got {sr}")
         signal = self.to_standard(signal)
