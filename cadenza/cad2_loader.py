@@ -54,6 +54,7 @@ class CAD2Loader:
         except FileNotFoundError:
             return {}
 
+    @lru_cache(maxsize=None)
     def song_dataset(self, split: str, song_name: str) -> str:
         tracks = [v["track"] for v in self.music(split)[song_name].values()]
         for t in tracks:
@@ -71,11 +72,24 @@ class CAD2Loader:
             if found:
                 return "+".join(sorted(found))
         if split == "train":
-            for info in self._json_optional("music_tracks.train.json").values():
-                mix = info.get("mixture_path")
-                if mix and any(t.endswith(mix) for t in tracks):
-                    return info.get("dataset", "unknown")
+            index = self._train_mix_index()
+            for t in tracks:
+                for key in (t, t.split("/", 1)[-1]):   # with or without the "train/" prefix
+                    if key in index:
+                        return index[key]
+            for mix, dataset in index.items():          # slow fallback, cached per song
+                if any(t.endswith(mix) for t in tracks):
+                    return dataset
         return "unknown"
+
+    @lru_cache(maxsize=None)
+    def _train_mix_index(self) -> dict:
+        index = {}
+        for info in self._json_optional("music_tracks.train.json").values():
+            mix = info.get("mixture_path")
+            if mix:
+                index[mix] = info.get("dataset", "unknown")
+        return index
 
     def scenes(self, split: str) -> dict:
         return self._json(f"scenes.{split}.json")
@@ -190,6 +204,7 @@ class CAD2Loader:
         split: str = "valid",
         target_sr: int | None = None,
         load_stems: bool = True,
+        max_seconds: float | None = None,
     ) -> dict:
         scene = self.scenes(split)[scene_id]
         song = self.music(split)[scene["music"]]
@@ -199,7 +214,15 @@ class CAD2Loader:
         mix_entry = self._mixture_entry(song)
         if mix_entry is None:
             raise FileNotFoundError(f"no mixture found for {scene_id} ({scene['music']})")
-        mixture = self.load_clip(mix_entry, split=split)
+        song_seconds = float(mix_entry["duration"])
+        window = None
+        if max_seconds and song_seconds > max_seconds:  # same window from the middle of the song for every file
+            window = (float(mix_entry["start"]) + (song_seconds - max_seconds) / 2, float(max_seconds))
+
+        def _windowed(entry):
+            return {**entry, "start": window[0], "duration": window[1]} if window else entry
+
+        mixture = self.load_clip(_windowed(mix_entry), split=split)
 
         sources = {k: v for k, v in song.items() if k.startswith("source")}
         instruments = {k: v["instrument"].split("_")[0] for k, v in sources.items()}
@@ -207,7 +230,7 @@ class CAD2Loader:
         if load_stems:
             for k, entry in sources.items():
                 if self._path(entry["track"], split).exists():
-                    stems[k] = self.load_clip(entry, split=split)
+                    stems[k] = self.load_clip(_windowed(entry), split=split)
                 else:
                     missing.append(k)
 
@@ -232,6 +255,7 @@ class CAD2Loader:
             "listener_id": listener_id,
             "split": split,
             "song": scene["music"],
+            "song_seconds": song_seconds,
             "sample_rate": sr,
             "mixture": mixture,
             "stems": stems,
@@ -255,6 +279,8 @@ class CAD2Loader:
             row["missing_stems"] = len(s["missing_stems"])
             row["same_shape"] = len({a.shape for a in arrays}) == 1 and arrays[0].shape[1] == 2
             row["gains_match"] = set(s["gains"]) == set(s["instruments"])
+            row["gains_diff"] = (f"gains has {sorted(set(s['gains']) - set(s['instruments']))}, "
+                                 f"song has {sorted(set(s['instruments']) - set(s['gains']))}") if not row["gains_match"] else ""
             if s["stems"] and not s["missing_stems"]:
                 err = np.sum((s["mixture"] - sum(s["stems"].values())) ** 2)
                 row["mix_mismatch_db"] = float(10 * np.log10(err / (np.sum(s["mixture"] ** 2) + 1e-12) + 1e-12))
