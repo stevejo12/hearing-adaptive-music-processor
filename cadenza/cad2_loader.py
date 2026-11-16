@@ -15,9 +15,9 @@ from clarity.utils.audiogram import Listener
 SAMPLE_RATE = 44100  # input_sample_rate in the baseline config.yaml
 
 
-def read_flac(path: Path) -> tuple[np.ndarray, int]:
-    signal, sr = sf.read(str(path), dtype="int16", always_2d=False)
-    signal = (signal / 32768.0).astype(np.float32)
+def read_flac(path: Path, start: int = 0, frames: int = -1) -> tuple[np.ndarray, int]:
+    signal, sr = sf.read(str(path), dtype="int16", always_2d=False, start=start, frames=frames)
+    signal = signal.astype(np.float32) / np.float32(32768.0)
     scale_file = Path(path).with_suffix(".txt")
     if scale_file.exists():
         signal *= float(scale_file.read_text(encoding="utf-8"))
@@ -156,15 +156,16 @@ class CAD2Loader:
         if not path.exists():
             tried = [str(path)] + ([str(self.audio / split / entry["track"])] if split else [])
             raise FileNotFoundError(f"{entry['track']} not found (tried {' and '.join(tried)})")
-        signal, sr = read_flac(path)
+        info = sf.info(str(path))
+        sr = info.samplerate
         if sr != SAMPLE_RATE:
             raise ValueError(f"{entry['track']}: expected {SAMPLE_RATE} Hz, got {sr}")
-        signal = self.to_standard(signal)
         n = int(round(entry["duration"] * sr))
-        if cut and len(signal) > n + 1:
-            start = int(round(entry["start"] * sr))
-            signal = signal[start : start + n]
-        return signal
+        if cut and info.frames > n + 1:
+            signal, _ = read_flac(path, start=int(round(entry["start"] * sr)), frames=n)
+        else:
+            signal, _ = read_flac(path)
+        return self.to_standard(signal)
 
     def _mixture_entry(self, song: dict) -> dict | None:
         if "mixture" in song:
