@@ -20,6 +20,8 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 
+import shutil
+
 # Keys which are not in the conf.yml file can be added here.
 # In the hierarchical dictionary created when parsing, the key `key` can be
 # found at dic['main_args'][key]
@@ -29,7 +31,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--exp_dir", default="exp/tmp", help="Full path to save best validation model"
 )
-
+parser.add_argument(
+    "--drive_ckpt_dir",
+    default=None,
+    help="Optional Drive directory to save per-epoch checkpoints and final model",
+)
+parser.add_argument(
+    "--ckpt_path",
+    default=None,
+    help="Path to a .ckpt file to resume training from",
+)
 
 def main(conf):
     source_augmentations = Compose([augment_gain, augment_channelswap])
@@ -118,6 +129,22 @@ def main(conf):
             EarlyStopping(monitor="val_loss", mode="min", patience=20, verbose=True)
         )
 
+    epoch_ckpt_dir = (
+        conf["main_args"]["drive_ckpt_dir"]
+        if conf["main_args"].get("drive_ckpt_dir")
+        else os.path.join(checkpoint_dir, "epochs")
+    )
+    os.makedirs(epoch_ckpt_dir, exist_ok=True)
+    every_epoch_ckpt = ModelCheckpoint(
+        dirpath=epoch_ckpt_dir,
+        filename="epoch-{epoch:03d}",
+        every_n_epochs=1,
+        save_top_k=-1,
+        save_last=True,
+        verbose=False,
+    )
+    callbacks.append(every_epoch_ckpt)
+
     trainer = pl.Trainer(
         max_epochs=conf["training"]["epochs"],
         callbacks=callbacks,
@@ -128,19 +155,27 @@ def main(conf):
         gradient_clip_val=5.0,
         accumulate_grad_batches=conf["training"]["aggregate"],
     )
-    trainer.fit(system)
+    trainer.fit(system, ckpt_path=conf["main_args"].get("ckpt_path"))
 
     best_k = {k: v.item() for k, v in checkpoint.best_k_models.items()}
     with open(os.path.join(exp_dir, "best_k_models.json"), "w") as f:
         json.dump(best_k, f, indent=0)
 
-    state_dict = torch.load(checkpoint.best_model_path)
-    system.load_state_dict(state_dict=state_dict["state_dict"])
+    if checkpoint.best_model_path:
+        state_dict = torch.load(checkpoint.best_model_path, map_location="cpu")
+        system.load_state_dict(state_dict=state_dict["state_dict"])
     system.cpu()
 
     to_save = system.model.serialize()
     to_save.update(train_set.get_infos())
-    torch.save(to_save, os.path.join(exp_dir, "best_model.pth"))
+    # torch.save(to_save, os.path.join(exp_dir, "best_model.pth"))
+    best_model_file = os.path.join(exp_dir, "best_model.pth")
+    torch.save(to_save, best_model_file)
+    if conf["main_args"].get("drive_ckpt_dir"):
+        drive_exp_dir = os.path.dirname(conf["main_args"]["drive_ckpt_dir"].rstrip("/"))
+        os.makedirs(drive_exp_dir, exist_ok=True)
+        shutil.copy2(best_model_file, os.path.join(drive_exp_dir, "best_model.pth"))
+        shutil.copy2(conf_path, os.path.join(drive_exp_dir, "conf.yml"))
 
 
 if __name__ == "__main__":
