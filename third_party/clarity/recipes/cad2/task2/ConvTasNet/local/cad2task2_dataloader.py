@@ -134,15 +134,22 @@ class RebalanceMusicDataset(data.Dataset):
             self.accompaniment_tracks: dict = {
                 i: [] for i in self.instruments if i != self.target
             }
+            inst_lookup = {k.lower(): k for k in self.accompaniment_tracks}
             for k, v in self.tracks.items():
                 for type_source, source in v.items():
                     if type_source == "mixture":
                         continue
 
                     if self.target not in source["instrument"]:
-                        self.accompaniment_tracks[
-                            source["instrument"].split("_")[0]
-                        ].append(k)
+                        raw_inst = source["instrument"].split("_")[0]
+                        canonical_inst = inst_lookup.get(raw_inst.lower())
+                        if canonical_inst is not None:
+                            self.accompaniment_tracks[canonical_inst].append(k)
+                        else:
+                            # Fallback if an instrument outside self.instruments appears
+                            canonical_inst = raw_inst.capitalize()
+                            inst_lookup[raw_inst.lower()] = canonical_inst
+                            self.accompaniment_tracks.setdefault(canonical_inst, []).append(k)
 
     def __len__(self):
         return len(self.target_tracks) * self.samples_per_track
