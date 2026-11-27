@@ -13,6 +13,19 @@ convtasnet:
   causal: False
   mask_nonlinear: 'relu'
 
+  #  Args:
+  #           N: Number of filters in autoencoder
+  #           B: Number of channels in bottleneck 1 × 1-conv block
+  #           H: Number of channels in convolutional blocks
+  #           P: Kernel size in convolutional blocks
+  #           X: Number of convolutional blocks in each repeat
+  #           R: Number of repeats
+  #           C: Number of speakers
+  #           norm_type: BN, gLN, cLN
+  #           causal: causal or non-causal
+  #           mask_nonlinear: use which non-linear function to generate mask
+  #       """
+
 # Training config
 training:
   epochs: 200
